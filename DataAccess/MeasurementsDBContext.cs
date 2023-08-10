@@ -18,7 +18,6 @@ namespace MeasurementsWebAPI.DataAccess
         }
 
         public virtual DbSet<Atm> Atms { get; set; } = null!;
-        public virtual DbSet<User> Users { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -41,26 +40,6 @@ namespace MeasurementsWebAPI.DataAccess
                 entity.Property(e => e.Description).IsUnicode(false);
             });
 
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.ToTable("USER");
-
-                entity.Property(e => e.FirstName)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.LastName)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Password)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Username)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-            });
 
             OnModelCreatingPartial(modelBuilder);
         }

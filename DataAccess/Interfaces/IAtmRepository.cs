@@ -1,11 +1,11 @@
 ﻿using MeasurementsWebAPI.BusinessLogic.Models;
 using System.Linq.Expressions;
 
-namespace MeasurementsWebAPI.BusinessLogic.Interfaces
+namespace MeasurementsWebAPI.DataAccess.Interfaces
 {
-    public interface IAtmBusinessManager
+    public interface IAtmRepository
     {
-        Task<IEnumerable<Atm>> GetAll();
+        Task<IEnumerable<Atm>> GetAll();        
         Task<Atm?> Get(int id);
         void Insert(Atm atm);
         void Update(Atm atm);

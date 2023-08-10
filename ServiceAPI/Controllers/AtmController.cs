@@ -1,5 +1,7 @@
-﻿using MeasurementsWebAPI.BusinessLogic.Interfaces;
+﻿using MeasurementsModels.Dtos;
+using MeasurementsWebAPI.BusinessLogic.Interfaces;
 using MeasurementsWebAPI.BusinessLogic.Models;
+using MeasurementsWebAPI.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net;
@@ -13,12 +15,10 @@ namespace MeasurementsWebAPI.ServiceAPI.Controllers
     public class AtmController : ControllerBase
     {
         private readonly IAtmBusinessManager _atmBusinessManager;
-        private readonly ILogger _logger;
-
+        
         public AtmController(IAtmBusinessManager atmBusinessManager)
         {
             _atmBusinessManager = atmBusinessManager;
-            //_logger = logger;
         }
 
         [HttpGet(),
@@ -26,18 +26,28 @@ namespace MeasurementsWebAPI.ServiceAPI.Controllers
         ProducesResponseType((int)HttpStatusCode.BadRequest),
         ProducesResponseType((int)HttpStatusCode.NotFound),
         ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        public async Task<ActionResult<IEnumerable<Atm>>> Get()
+        public async Task<ActionResult<IEnumerable<AtmDto>>> Get()
         {
             try
             {
-                return Ok(await _atmBusinessManager.GetAll());
-            }
-            catch (Exception ex)
-            {
-                var errorMessage = "Failed to retrieve list of ATMs!";
-                //_logger.LogError(errorMessage, ex);
+                var atms = await _atmBusinessManager.GetAll();
 
-                return StatusCode((int) HttpStatusCode.InternalServerError, errorMessage);
+                if (atms == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    var atmDtos = atms.ConvertToDto();
+                    return Ok(atmDtos);
+                }
+                
+            }
+            catch (Exception)
+            {
+                var errorMessage = "Error retrieving data from database!";
+                
+                return StatusCode(StatusCodes.Status500InternalServerError, errorMessage);
             }
         }
 
@@ -46,13 +56,12 @@ namespace MeasurementsWebAPI.ServiceAPI.Controllers
         {
             try
             {
-                return Ok( await _atmBusinessManager.SingleOrDefault(x=>x.Id==id));
+                return Ok( await _atmBusinessManager.Get(id));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 var errorMessage = $"Failed to retrieve ATM with ID {id}!";
-                //_logger.LogError(errorMessage, ex);
-
+               
                 return StatusCode((int)HttpStatusCode.InternalServerError, errorMessage);
             }
         }
@@ -63,13 +72,12 @@ namespace MeasurementsWebAPI.ServiceAPI.Controllers
             try
             {
                 _atmBusinessManager.Insert(atm);
-                return Ok("Success!");
+                return Ok("OK!");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 var errorMessage = $"Failed to insert new ATM!";
-                //_logger.LogError(errorMessage, ex);
-
+                
                 return StatusCode((int)HttpStatusCode.InternalServerError, errorMessage);
             }
         }
@@ -80,13 +88,12 @@ namespace MeasurementsWebAPI.ServiceAPI.Controllers
             try
             {
                 _atmBusinessManager.Update(atm);
-                return Ok("Success!");
+                return Ok("OK!");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 var errorMessage = $"Failed to update ATM with ID {id}!";
-                //_logger.LogError(errorMessage, ex);
-
+                
                 return StatusCode((int)HttpStatusCode.InternalServerError, errorMessage);
             }
         }
@@ -97,14 +104,13 @@ namespace MeasurementsWebAPI.ServiceAPI.Controllers
             try
             {
                 _atmBusinessManager.Delete(id);
-                return Ok("Success!");
+                return Ok("OK!");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 var errorMessage = $"Failed to delete ATM with ID {id}!";
-                //_logger.LogError(errorMessage, ex);
-
+                
                 return StatusCode((int)HttpStatusCode.InternalServerError, errorMessage);
             }
         }

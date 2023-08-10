@@ -20,7 +20,7 @@ namespace MeasurementsWebAPI
             builder.Services.AddDbContext<MeasurementsDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("MeasurementsDBContext")));
 
-            builder.Services.AddScoped<IGenericRepository<Atm>,GenericRepository<Atm>>();
+            builder.Services.AddScoped<IAtmRepository,AtmRepository>();
             builder.Services.AddScoped<IAtmBusinessManager, AtmBusinessManager>();
             
             builder.Services.AddControllers();

@@ -1,19 +1,19 @@
-﻿using MeasurementsWebAPI.BusinessLogic.Interfaces;
+﻿using MeasurementsWebAPI.BusinessLogic;
+using MeasurementsWebAPI.BusinessLogic.Interfaces;
 using MeasurementsWebAPI.BusinessLogic.Models;
 using MeasurementsWebAPI.DataAccess.Interfaces;
 using System.Linq.Expressions;
+
 
 namespace MeasurementsWebAPI.BusinessManager
 {
     public class AtmBusinessManager : IAtmBusinessManager
     {
-        private readonly IGenericRepository<Atm> _repository;
-        //private readonly ILogger _logger;
-
-        public AtmBusinessManager(IGenericRepository<Atm> repository)
+        private readonly IAtmRepository _repository;
+        
+        public AtmBusinessManager(IAtmRepository repository)
         {
             _repository = repository;
-            //_logger = logger;
         }
 
         public void Delete(int id)
@@ -22,25 +22,23 @@ namespace MeasurementsWebAPI.BusinessManager
             {
                 _repository.Delete(id);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var errorMessage = $"ATM Business Manager: Delete Method!";
-                //_logger.LogError(errorMessage, ex);
+                throw;
             }
         }
 
-        public async Task<IEnumerable<Atm>> Get(Expression<Func<Atm, bool>> pred)
+        public async Task<Atm?> Get(int id)
         {
             try
             {
-                return await _repository.Get(pred);
+                return await _repository.Get(id);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var errorMessage = $"ATM Business Manager: Get Method!";
-                //_logger.LogError(errorMessage, ex);
-                return Enumerable.Empty<Atm>();
+                throw;
             }
+            
         }
 
         public async Task<IEnumerable<Atm>> GetAll()
@@ -49,11 +47,9 @@ namespace MeasurementsWebAPI.BusinessManager
             {
                 return await _repository.GetAll();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var errorMessage = $"ATM Business Manager: GetAll Method!";
-                //_logger.LogError(errorMessage, ex);
-                return Enumerable.Empty<Atm>();
+                throw;
             }
         }
 
@@ -63,24 +59,9 @@ namespace MeasurementsWebAPI.BusinessManager
             {
                 _repository.Insert(atm);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var errorMessage = $"ATM Business Manager: Insert Method!";
-                //_logger.LogError(errorMessage, ex);
-            }
-        }
-
-        public async Task<Atm?> SingleOrDefault(Expression<Func<Atm, bool>> pred)
-        {
-            try
-            {
-                return await _repository.SingleOrDefault(pred);
-            }
-            catch (Exception ex)
-            {
-                var errorMessage = $"ATM Business Manager: SingleOrDefult Method!";
-                //_logger.LogError(errorMessage, ex);
-                return null;
+                throw;
             }
         }
 
@@ -90,10 +71,9 @@ namespace MeasurementsWebAPI.BusinessManager
             {
                 _repository.Update(atm);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var errorMessage = $"ATM Business Manager: Update Method!";
-                //_logger.LogError(errorMessage, ex);
+                throw;
             }
         }
     }
