@@ -16,11 +16,11 @@ namespace MeasurementsWebAPI.BusinessManager
             _repository = repository;
         }
 
-        public void Delete(int id)
+        public async Task<Atm> Delete(int id)
         {
             try
             {
-                _repository.Delete(id);
+                return await _repository.Delete(id);
             }
             catch (Exception)
             {
@@ -28,7 +28,7 @@ namespace MeasurementsWebAPI.BusinessManager
             }
         }
 
-        public async Task<Atm?> Get(int id)
+        public async Task<Atm> Get(int id)
         {
             try
             {
@@ -53,11 +53,27 @@ namespace MeasurementsWebAPI.BusinessManager
             }
         }
 
-        public void Insert(Atm atm)
+        public void GetHash(int id, Atm atm)
         {
             try
             {
-                _repository.Insert(atm);
+                using (HashCalculator hashCalculator = new HashCalculator())
+                {
+                    hashCalculator.CalculateATMHash(atm.Description);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<Atm> Insert(Atm atm)
+        {
+            try
+            {
+                return await _repository.Insert(atm);
             }
             catch (Exception)
             {
@@ -65,11 +81,11 @@ namespace MeasurementsWebAPI.BusinessManager
             }
         }
 
-        public void Update(Atm atm)
+        public async Task<Atm> Update(Atm atm)
         {
             try
             {
-                _repository.Update(atm);
+                return await _repository.Update(atm);
             }
             catch (Exception)
             {

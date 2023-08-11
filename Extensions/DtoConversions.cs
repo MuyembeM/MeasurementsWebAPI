@@ -29,5 +29,17 @@ namespace MeasurementsWebAPI.Extensions
                 Width = atm.Width
             };
         }
+
+        public static Atm ConvertFromDto(this AtmDto atmDto)
+        {
+            return new Atm
+            {
+                Id = atmDto.Id,
+                Description = atmDto.Description,
+                Height = atmDto.Height,
+                Length = atmDto.Length,
+                Width = atmDto.Width
+            };
+        }
     }
 }

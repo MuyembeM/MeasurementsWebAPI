@@ -7,8 +7,8 @@ namespace MeasurementsWebAPI.DataAccess.Interfaces
     {
         Task<IEnumerable<Atm>> GetAll();        
         Task<Atm?> Get(int id);
-        void Insert(Atm atm);
-        void Update(Atm atm);
-        void Delete(int id);
+        Task<Atm> Insert(Atm atm);
+        Task<Atm> Update(Atm atm);
+        Task<Atm> Delete(int id);
     }
 }

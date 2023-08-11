@@ -21,11 +21,7 @@ namespace MeasurementsWebAPI.ServiceAPI.Controllers
             _atmBusinessManager = atmBusinessManager;
         }
 
-        [HttpGet(),
-        ProducesResponseType((int)HttpStatusCode.OK),
-        ProducesResponseType((int)HttpStatusCode.BadRequest),
-        ProducesResponseType((int)HttpStatusCode.NotFound),
-        ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [HttpGet()]
         public async Task<ActionResult<IEnumerable<AtmDto>>> Get()
         {
             try
@@ -51,7 +47,7 @@ namespace MeasurementsWebAPI.ServiceAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AtmDto?>> Get(int id)
+        public async Task<ActionResult<AtmDto>> Get(int id)
         {
             try
             {
@@ -72,54 +68,94 @@ namespace MeasurementsWebAPI.ServiceAPI.Controllers
                 var errorMessage = $"Failed to retrieve ATM with ID {id}!";
                 return StatusCode(StatusCodes.Status500InternalServerError, errorMessage);
             }
-        }
+        }        
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Atm atm)
+        public async Task<ActionResult<AtmDto>> Post([FromBody] AtmDto atmDto)
         {
             try
             {
-                _atmBusinessManager.Insert(atm);
-                return Ok("OK!");
+                var atm = await _atmBusinessManager.Insert(atmDto.ConvertFromDto());
+
+                if (atm == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    var newAtmDto = atm.ConvertToDto();
+                    return Ok(newAtmDto);
+                }
             }
             catch (Exception)
             {
                 var errorMessage = $"Failed to insert new ATM!";
-                
-                return StatusCode((int)HttpStatusCode.InternalServerError, errorMessage);
+                return StatusCode(StatusCodes.Status500InternalServerError, errorMessage);
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] Atm atm)
+        [HttpPost("{id:int}")]
+        public async Task<ActionResult<AtmDto>> Post(int id, AtmDto atmDto)
         {
             try
             {
-                _atmBusinessManager.Update(atm);
-                return Ok("OK!");
+                _atmBusinessManager.GetHash(id,atmDto.ConvertFromDto());
+
+                return Ok(atmDto);
+            }
+            catch (Exception)
+            {
+                var errorMessage = $"Failed to insert new ATM!";
+                return StatusCode(StatusCodes.Status500InternalServerError, errorMessage);
+            }
+        }
+
+        [HttpPatch("{id:int}")]
+        public async Task<ActionResult<AtmDto>> Patch(int id, AtmDto atmDto)
+        {
+            try
+            {
+                var atm = await _atmBusinessManager.Update(atmDto.ConvertFromDto());
+
+                if (atm == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    var newAtmDto = atm.ConvertToDto();
+                    return Ok(newAtmDto);
+                }
             }
             catch (Exception)
             {
                 var errorMessage = $"Failed to update ATM with ID {id}!";
-                
-                return StatusCode((int)HttpStatusCode.InternalServerError, errorMessage);
+                return StatusCode(StatusCodes.Status500InternalServerError, errorMessage);
             }
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult<AtmDto>> Delete(int id)
         {
             try
             {
-                _atmBusinessManager.Delete(id);
-                return Ok("OK!");
+                var atm = await _atmBusinessManager.Delete(id);
+
+                if (atm == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    var atmDto = atm.ConvertToDto();
+                    return Ok(atmDto);
+                }
             }
             catch (Exception)
             {
 
                 var errorMessage = $"Failed to delete ATM with ID {id}!";
-                
-                return StatusCode((int)HttpStatusCode.InternalServerError, errorMessage);
+                return StatusCode(StatusCodes.Status500InternalServerError, errorMessage);
             }
         }
     }

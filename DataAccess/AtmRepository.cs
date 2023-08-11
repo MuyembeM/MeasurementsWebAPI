@@ -15,13 +15,14 @@ namespace MeasurementsWebAPI.DataAccess
             _dbContext = dBContext;
         }
         
-        public void Delete(int id)
+        public async Task<Atm> Delete(int id)
         {
-            var entityToDelete = _dbContext.Atms.Find(id);
+            var entityToDelete = await _dbContext.Atms.FindAsync(id);
             if (entityToDelete != null)
             {
                 Delete(entityToDelete);
             }
+            return entityToDelete;
         }
 
         public void Delete(Atm entityToDelete)
@@ -44,17 +45,19 @@ namespace MeasurementsWebAPI.DataAccess
             return await _dbContext.Atms.ToListAsync();
         }
 
-        public void Insert(Atm atm)
+        public async Task<Atm> Insert(Atm atm)
         {
             _dbContext.Atms.Add(atm);
             _dbContext.SaveChanges();
+            return await _dbContext.Atms.OrderBy(x=>x.Id).LastOrDefaultAsync();
         }
 
-        public void Update(Atm entityToUpdate)
+        public async Task<Atm> Update(Atm entityToUpdate)
         {
             _dbContext.Atms.Attach(entityToUpdate);
             _dbContext.Entry(entityToUpdate).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
+            return entityToUpdate;
         }
     }
 }
