@@ -5,6 +5,7 @@ using MeasurementsWebAPI.BusinessLogic.Models;
 using MeasurementsWebAPI.BusinessLogic.Interfaces;
 using MeasurementsWebAPI.BusinessManager;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 
 namespace MeasurementsWebAPI
 {
@@ -43,6 +44,11 @@ namespace MeasurementsWebAPI
             {
                 app.UseExceptionHandler("/error");
             }
+
+            app.UseCors(policy =>
+                policy.WithOrigins("https://localhost:7006", "http://localhost:5216")
+                .AllowAnyMethod()
+                .WithHeaders(HeaderNames.ContentType));
 
             app.UseHttpsRedirection();            
 

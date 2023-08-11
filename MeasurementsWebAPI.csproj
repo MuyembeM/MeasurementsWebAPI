@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Measurements.Models\MeasurementsModels.csproj" />
+    <ProjectReference Include="..\MeasurementsModels\MeasurementsModels.csproj" />
   </ItemGroup>
 
 </Project>

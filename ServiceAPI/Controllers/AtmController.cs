@@ -45,24 +45,32 @@ namespace MeasurementsWebAPI.ServiceAPI.Controllers
             }
             catch (Exception)
             {
-                var errorMessage = "Error retrieving data from database!";
-                
+                var errorMessage = "Error retrieving data from database!";                
                 return StatusCode(StatusCodes.Status500InternalServerError, errorMessage);
             }
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Atm?>> Get(int id)
+        public async Task<ActionResult<AtmDto?>> Get(int id)
         {
             try
             {
-                return Ok( await _atmBusinessManager.Get(id));
+                var atm = await _atmBusinessManager.Get(id);
+
+                if (atm == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    var atmDto = atm.ConvertToDto();
+                    return Ok(atmDto);
+                }
             }
             catch (Exception)
             {
                 var errorMessage = $"Failed to retrieve ATM with ID {id}!";
-               
-                return StatusCode((int)HttpStatusCode.InternalServerError, errorMessage);
+                return StatusCode(StatusCodes.Status500InternalServerError, errorMessage);
             }
         }
 
