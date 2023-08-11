@@ -5,7 +5,6 @@ namespace MeasurementsWebAPI.BusinessLogic
 {
     public class HashCalculator : IDisposable
     {
-        private readonly ILogger _logger;
         private bool disposed = false;
 
         public HashCalculator()

@@ -33,10 +33,6 @@ namespace MeasurementsWebAPI.DataAccess
             {
                 entity.ToTable("ATM");
 
-                entity.Property(e => e.DateCreated).HasColumnType("datetime");
-
-                entity.Property(e => e.DateModified).HasColumnType("datetime");
-
                 entity.Property(e => e.Description).IsUnicode(false);
             });
 

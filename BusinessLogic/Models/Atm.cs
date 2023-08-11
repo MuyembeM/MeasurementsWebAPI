@@ -1,5 +1,4 @@
-﻿using MeasurementsWebAPI.BusinessLogic.CustomAttributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -14,18 +13,15 @@ namespace MeasurementsWebAPI.BusinessLogic.Models
         public string Description { get; set; } = null!;
 
         [Required]
-        [MinValue(0, "Length cannot be less than 0")]
+        [Range(0, int.MaxValue)]
         public int Length { get; set; }
 
         [Required]
-        [MinValue(0,"Width cannot be less than 0")]
-        [MaxValue(800,"Width cannot be more than 800")]
+        [Range(0, 800)]
         public int Width { get; set; }
 
         [Required]
-        [MinValue(100, "Height cannot be less than 0")]
+        [Range(100, int.MaxValue)]
         public int Height { get; set; }
-        public DateTime? DateCreated { get; set; }
-        public DateTime? DateModified { get; set; }
     }
 }

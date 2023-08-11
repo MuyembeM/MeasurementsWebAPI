@@ -16,7 +16,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MeasurementsDLL\MeasurementsDLL.vcxproj" />
     <ProjectReference Include="..\MeasurementsModels\MeasurementsModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="x64\Debug\" />
+    <Folder Include="x64\Release\" />
   </ItemGroup>
 
 </Project>
